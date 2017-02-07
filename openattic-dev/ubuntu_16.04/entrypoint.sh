@@ -63,6 +63,7 @@ function setup_oa {
   a2enconf openattic
   systemctl restart apache2
   cd /srv/openattic/webui
+  npm install
   grunt dev
 }
 
