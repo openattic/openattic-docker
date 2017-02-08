@@ -64,6 +64,7 @@ function setup_oa {
   systemctl restart apache2
   cd /srv/openattic/webui
   npm install
+  bower install --allow-root
   grunt dev
 }
 
