@@ -1,11 +1,11 @@
 # openattic-dev Docker image
 
 This docker image will run openATTIC from the source. It will spawn all the
-necessary services such as apache, postgresql, nagios, pnp4nagios, and is
-already ready for managing a Ceph cluster.
+necessary services such as apache, postgresql, nagios/icinga, pnp4nagios, and
+is already ready for managing a Ceph cluster.
 
-Currently only the only docker image available is based on Ubuntu 16.04.
-We will provide another for openSUSE Leap 42.2 soon.
+Please choose which distro you want to use for running openATTIC, a execute
+the instructions below inside the distro directory.
 
 ## Usage instructions
 
@@ -19,7 +19,7 @@ We will provide another for openSUSE Leap 42.2 soon.
 `hg clone https://bitbucket.org/openattic/openattic`
  
 * Assuming openattic repo is located in `/home/oa/openattic` and the Ceph
-configuration and keyring files are localted in `/etc/ceph`, run the following
+configuration and keyring files are located in `/etc/ceph`, run the following
 command:
 ```
 docker run -t -v /home/oa/openattic:/srv/openattic \
@@ -28,7 +28,7 @@ docker run -t -v /home/oa/openattic:/srv/openattic \
 		      --net=host --privileged \
 		      --security-opt seccomp=unconfined \
 		      --stop-signal=SIGRTMIN+3 \
-		      --tmpfs /run --tmpfs /run/lock  \
+		      --tmpfs /run/lock  \
 		      openattic-dev
 ```
 
@@ -37,7 +37,7 @@ start apache.
 In the end it will run the `grunt dev` command on the `openattic/webui`
 directory to keep the changes of the ui in sync.
 
-After this step you can access openATTIC gui in http://localhost/openattic
+After this step you can access openATTIC gui in http://localhost/openattic/
 
 * When the container finishes emitting output, you can `Ctrl-C`. The container
 will keep running nevertheless.
