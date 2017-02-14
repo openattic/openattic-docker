@@ -102,12 +102,50 @@ cfg_file=/etc/icinga/objects/openattic_static.cfg' \
   systemd --system &> systemd.log &
   SYSD_PID=$!
   sleep 3
+  sed -i -e 's/#master: salt/master: localhost/' /etc/salt/minion
+  sed -i -e 's/^Type=notify/Type=simple/' -e 's/^Notify*//' /usr/lib/systemd/system/salt-minion.service
   systemctl daemon-reload
   systemctl start apache2
   systemctl start icinga
   systemctl start npcd
   systemd-tmpfiles --create /usr/lib/tmpfiles.d/openattic.conf
   systemctl start lvm2-lvmetad.socket
+  systemctl start salt-master
+  sleep 2
+  systemctl start salt-minion
+  sleep 5
+  salt-key -Ay
+
+  cd /srv/deepsea
+  if [[ -e Makefile ]]; then
+    make install
+    sed -i "s/_REPLACE_ME_/`hostname -f`/" /srv/pillar/ceph/master_minion.sls
+    chown -R salt:salt /srv/pillar
+    systemctl restart salt-master
+    sleep 2
+    salt-run state.orch ceph.stage.prep
+    sleep 2
+    salt-run state.orch ceph.stage.discovery
+cat > /srv/pillar/ceph/proposals/policy.cfg <<EOF
+# Cluster assignment
+cluster-ceph/cluster/*.sls
+# Hardware Profile
+profile-*-1/cluster/*.sls
+profile-*-1/stack/default/ceph/minions/*yml
+# Common configuration
+config/stack/default/global.yml
+config/stack/default/ceph/cluster.yml
+# Role assignment
+role-master/cluster/*.sls
+role-mon/cluster/*.sls
+role-igw/cluster/*.sls
+role-mon/stack/default/ceph/minions/*.yml
+EOF
+    chown salt:salt /srv/pillar/ceph/proposals/policy.cfg
+    sleep 2
+    salt-run state.orch ceph.stage.configure
+  fi
+
   /srv/openattic/bin/oaconfig install --allow-broken-hostname
   chmod 660 /var/log/openattic/openattic.log
   cd /srv/openattic/webui

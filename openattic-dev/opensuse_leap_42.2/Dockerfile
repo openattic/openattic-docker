@@ -20,7 +20,8 @@ python-rados ceph-common cronie lvm2 bc nagios icinga \\
 pnp4nagios nagios-plugins-http nagios-plugins-swap nagios-plugins-ssh \\
 nagios-plugins-ping nagios-plugins-disk nagios-plugins-users nagios-plugins-procs \\
 nagios-plugins-load nagios-plugins-tcp nfs-utils cron postgresql-server \\
-postgresql vlan shadow smtp_daemon samba && \\
+postgresql vlan shadow smtp_daemon samba salt-master salt-minion \\
+python-ipaddress gmake && \\
 zypper clean -a
 
 RUN (cd /usr/lib/systemd/system/sysinit.target.wants/; for i in *; do [ $i == \
@@ -45,6 +46,6 @@ usermod -a --groups icinga,nagcmd,www openattic
 
 EXPOSE 5432 80
 
-VOLUME ["/srv/openattic", "/sys/fs/cgroup", "/etc/ceph"]
+VOLUME ["/srv/openattic", "/sys/fs/cgroup", "/etc/ceph", "/srv/deepsea"]
 
 ENTRYPOINT ["/entrypoint.sh"]
