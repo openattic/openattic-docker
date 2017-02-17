@@ -46,3 +46,14 @@ will keep running nevertheless.
 `docker exec CONTAINER_ID tail -f /var/log/openattic/openattic.log`
 
 
+## HTTP proxy
+
+If you are behind an HTTP proxy server, for example in corporate settings, you will need to:
+
+* Add proxy configuration to the `DockerFile`:
+```
+ENV http_proxy http://<proxy.server>:<proxy.port>
+ENV https_proxy http://<proxy.server>:<proxy.port>
+```
+* Add `--network=host` option when running `docker build`
+
