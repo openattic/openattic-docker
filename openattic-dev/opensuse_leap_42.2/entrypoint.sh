@@ -118,11 +118,22 @@ cfg_file=/etc/icinga/objects/openattic_static.cfg' \
     make install
     sed -i "s/_REPLACE_ME_/`hostname -f`/" /srv/pillar/ceph/master_minion.sls
     sed -i -e 's/v\.storage()/#v.storage()/g' -e 's/v\.ganesha()/#v.ganesha()/g' /srv/modules/runners/validate.py
+
+cat > /srv/salt/ceph/updates/default_my.sls <<EOF
+dummy command:
+  cmd.run:
+    - name: "ls"
+    - shell: /bin/bash
+EOF
+    cp /srv/salt/ceph/updates/default_my.sls /srv/salt/ceph/updates/restart
+    sed -i 's/default/default_my/g' /srv/salt/ceph/updates/init.sls
+    sed -i 's/default/default_my/g' /srv/salt/ceph/updates/restart/init.sls
+
     chown -R salt:salt /srv/pillar
     systemctl restart salt-master
+    sleep 5
+    salt-run state.orch ceph.stage.prep
     sleep 10
-    salt '*' saltutil.sync_all
-    sleep 2
     salt-run state.orch ceph.stage.discovery
 cat > /srv/pillar/ceph/proposals/policy.cfg <<EOF
 # Cluster assignment
