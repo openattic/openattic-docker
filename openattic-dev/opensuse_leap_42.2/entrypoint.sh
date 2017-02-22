@@ -167,7 +167,7 @@ EOF
   chown -R openattic:openattic /var/lock/openattic
   chown -R openattic:openattic /var/lib/openattic
 
-  chgrp -R openattic /etc/ceph
+  chown -R openattic /etc/ceph
 
 
   /srv/openattic/bin/oaconfig install --allow-broken-hostname
