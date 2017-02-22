@@ -3,6 +3,7 @@
 : ${PGSQL_IP:=*}
 
 function setup_oa {
+
   mkdir -p /var/log/openattic
   mkdir -p /etc/openattic/databases
   mkdir -p /var/lock/openattic
@@ -92,16 +93,12 @@ cfg_file=/etc/icinga/objects/openattic_plugins.cfg\
 cfg_file=/etc/icinga/objects/openattic_static.cfg' \
        /etc/icinga/icinga.cfg
 
-  chown -R openattic:openattic /var/log/openattic
-  chown -R openattic:openattic /etc/openattic
-  chown -R openattic:openattic /var/lock/openattic
-  chown -R openattic:openattic /var/lib/openattic
-
-  chgrp -R openattic /etc/ceph
-
   systemd --system &> systemd.log &
+
   SYSD_PID=$!
   sleep 3
+  SuSEfirewall2 off
+
   sed -i -e 's/#master: salt/master: localhost/' /etc/salt/minion
   sed -i -e 's/^Type=notify/Type=simple/' -e 's/^Notify*//' /usr/lib/systemd/system/salt-minion.service
   systemctl daemon-reload
@@ -113,17 +110,18 @@ cfg_file=/etc/icinga/objects/openattic_static.cfg' \
   systemctl start salt-master
   sleep 2
   systemctl start salt-minion
-  sleep 5
+  sleep 20
   salt-key -Ay
 
   cd /srv/deepsea
   if [[ -e Makefile ]]; then
     make install
     sed -i "s/_REPLACE_ME_/`hostname -f`/" /srv/pillar/ceph/master_minion.sls
+    sed -i -e 's/v\.storage()/#v.storage()/g' -e 's/v\.ganesha()/#v.ganesha()/g' /srv/modules/runners/validate.py
     chown -R salt:salt /srv/pillar
     systemctl restart salt-master
-    sleep 2
-    salt-run state.orch ceph.stage.prep
+    sleep 10
+    salt '*' saltutil.sync_all
     sleep 2
     salt-run state.orch ceph.stage.discovery
 cat > /srv/pillar/ceph/proposals/policy.cfg <<EOF
@@ -136,15 +134,30 @@ profile-*-1/stack/default/ceph/minions/*yml
 config/stack/default/global.yml
 config/stack/default/ceph/cluster.yml
 # Role assignment
-role-master/cluster/*.sls
-role-mon/cluster/*.sls
-role-igw/cluster/*.sls
-role-mon/stack/default/ceph/minions/*.yml
+role-master/cluster/salt.sls
+role-admin/cluster/salt.sls
+role-mon/cluster/node*.sls
+role-igw/cluster/node[12]*.sls
+role-mon/stack/default/ceph/minions/node*.yml
 EOF
     chown salt:salt /srv/pillar/ceph/proposals/policy.cfg
     sleep 2
     salt-run state.orch ceph.stage.configure
+    sleep 5
+    salt-run state.orch ceph.stage.deploy
   fi
+
+  sleep 10
+  echo "################# FINISHED Ceph deploy ###########"
+  ceph -s
+
+  chown -R openattic:openattic /var/log/openattic
+  chown -R openattic:openattic /etc/openattic
+  chown -R openattic:openattic /var/lock/openattic
+  chown -R openattic:openattic /var/lib/openattic
+
+  chgrp -R openattic /etc/ceph
+
 
   /srv/openattic/bin/oaconfig install --allow-broken-hostname
   chmod 660 /var/log/openattic/openattic.log

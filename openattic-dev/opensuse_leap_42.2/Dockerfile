@@ -6,6 +6,7 @@ MAINTAINER Ricardo Dias "rdias@suse.com"
 ADD entrypoint.sh pgsql_setup.sh /
 
 RUN zypper ar http://download.opensuse.org/repositories/filesystems:/openATTIC/openSUSE_Leap_42.2 oa_repo
+RUN zypper ar http://download.opensuse.org/repositories/filesystems:/ceph:/jewel/openSUSE_Leap_42.1/filesystems:ceph:jewel.repo
 RUN zypper --gpg-auto-import-keys ref && \
 zypper -n install --force-resolution krb5 && \
 zypper -n install mercurial git nodejs npm bridge-utils bzip2 dbus-1 systemd \\
@@ -21,7 +22,7 @@ pnp4nagios nagios-plugins-http nagios-plugins-swap nagios-plugins-ssh \\
 nagios-plugins-ping nagios-plugins-disk nagios-plugins-users nagios-plugins-procs \\
 nagios-plugins-load nagios-plugins-tcp nfs-utils cron postgresql-server \\
 postgresql vlan shadow smtp_daemon samba salt-master salt-minion \\
-python-ipaddress gmake && \\
+python-ipaddress gmake iptables SuSEfirewall2 && \\
 zypper clean -a
 
 RUN (cd /usr/lib/systemd/system/sysinit.target.wants/; for i in *; do [ $i == \
