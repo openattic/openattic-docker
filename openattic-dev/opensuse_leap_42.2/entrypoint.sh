@@ -98,6 +98,7 @@ cfg_file=/etc/icinga/objects/openattic_static.cfg' \
   chown -R openattic:openattic /var/lib/openattic
 
   chgrp -R openattic /etc/ceph
+  chmod 644 /etc/ceph/ceph.client.admin.keyring
 
   systemd --system &> systemd.log &
   SYSD_PID=$!
