@@ -112,8 +112,16 @@ cfg_file=/etc/icinga/objects/openattic_static.cfg' \
   /srv/openattic/bin/oaconfig install --allow-broken-hostname
   chmod 660 /var/log/openattic/openattic.log
   cd /srv/openattic/webui
-  npm install
-  bower install --allow-root
+  touch .chown
+  chown openattic .chown &> /dev/null
+  CHOWN_RET=$?
+  if [ "$CHOWN_RET" == "0" ]; then
+    npm install
+    bower install --allow-root
+  else
+    runuser -l openattic -c 'cd /srv/openattic/webui && npm install && bower install'
+  fi
+  rm .chown
   grunt dev
 }
 
