@@ -4,6 +4,8 @@ This docker image will run openATTIC from the source. It will spawn all the
 necessary services such as apache, postgresql, nagios/icinga, pnp4nagios, and
 is already ready for managing a Ceph cluster.
 
+You can also run the openATTIC django unit tests using this image.
+
 Please choose which distro you want to use for running openATTIC, a execute
 the instructions below inside the distro directory.
 
@@ -17,7 +19,7 @@ the instructions below inside the distro directory.
 
 * Clone the bitbucket openattic repo
 `hg clone https://bitbucket.org/openattic/openattic`
- 
+
 * Assuming openattic repo is located in `/home/oa/openattic` and the Ceph
 configuration and keyring files are located in `/etc/ceph`, run the following
 command:
@@ -44,6 +46,27 @@ will keep running nevertheless.
 
 * To check the openAttic backend log run the following command:
 `docker exec CONTAINER_ID tail -f /var/log/openattic/openattic.log`
+
+### Running the django unit tests
+
+* Clone the bitbucket openattic repo
+`hg clone https://bitbucket.org/openattic/openattic`
+
+* Assuming openattic repo is located in `/home/oa/openattic`:
+```
+docker run -t -v /home/oa/openattic:/srv/openattic \
+		      -v /sys/fs/cgroup:/sys/fs/cgroup:ro \
+		      --net=host --privileged \
+		      --security-opt seccomp=unconfined \
+		      --stop-signal=SIGRTMIN+3 \
+		      --tmpfs /run/lock --rm \
+		      openattic-dev tests
+```
+This is will start a container that will run the django unit tests using the
+source code present in `/home/oa/openattic`.
+
+This container is removed automatically when it finishes the execution of the
+unit tests.
 
 
 ## HTTP proxy

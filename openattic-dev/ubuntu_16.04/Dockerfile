@@ -13,8 +13,13 @@ python-configobj python-gobject python-pam python-m2crypto python-netifaces \
 python-netaddr python-requests python-pyudev python-djangorestframework \
 lsb-release memcached python-memcache python-psycopg2 python-numpy \
 python-rtslib python-apt nagios3-core nagios-plugins-standard \
-nagios-plugins-basic rrdtool lvm2 ceph ceph-common python-ceph && \
+nagios-plugins-basic rrdtool lvm2 ceph ceph-common python-ceph \
+zfs && \
 apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+RUN wget https://bootstrap.pypa.io/get-pip.py && \
+python get-pip.py && \
+/usr/local/bin/pip install mock
 
 RUN ln -s /usr/bin/nodejs /usr/bin/node
 RUN npm install -g bower
