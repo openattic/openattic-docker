@@ -7,6 +7,7 @@ ADD entrypoint.sh pgsql_setup.sh /
 
 RUN zypper ar http://download.opensuse.org/repositories/filesystems:/openATTIC/openSUSE_Leap_42.2 oa_repo
 RUN zypper ar http://download.opensuse.org/repositories/filesystems/openSUSE_Leap_42.2 zfs_repo
+RUN zypper ar http://download.opensuse.org/repositories/devel:/languages:/python/openSUSE_Leap_42.2 python_libs
 RUN zypper --gpg-auto-import-keys ref && \
 zypper -n install --force-resolution krb5 && \
 zypper -n install --force-resolution e2fsprogs && \
@@ -22,7 +23,7 @@ python-rados ceph-common cronie lvm2 bc nagios icinga python-coverage \\
 pnp4nagios nagios-plugins-http nagios-plugins-swap nagios-plugins-ssh \\
 nagios-plugins-ping nagios-plugins-disk nagios-plugins-users nagios-plugins-procs \\
 nagios-plugins-load nagios-plugins-tcp nfs-utils cron postgresql-server \\
-postgresql vlan shadow smtp_daemon samba python-mock zfs && \\
+postgresql vlan shadow smtp_daemon samba python-mock python-requests-aws zfs && \\
 zypper clean -a
 
 RUN (cd /usr/lib/systemd/system/sysinit.target.wants/; for i in *; do [ $i == \
