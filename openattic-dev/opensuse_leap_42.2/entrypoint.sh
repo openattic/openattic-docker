@@ -227,7 +227,8 @@ EOF
   systemctl stop apache2
 
   cd /srv/openattic/backend
-  python manage.py test -t . -v 2
+  coverage run --source='.' manage.py test -t . -v 2
+  coverage html
 }
 
 

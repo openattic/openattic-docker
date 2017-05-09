@@ -18,7 +18,7 @@ python-django python-imaging python-m2ext python-memcached python-netaddr \\
 python-netifaces python-pam python-psycopg2 python-pyudev python-requests \\
 python-simplejson selinux-tools policycoreutils btrfsprogs python-rtslib \\
 udisks2 wget xfsprogs net-tools apache2 policycoreutils-python  \\
-python-rados ceph-common cronie lvm2 bc nagios icinga \\
+python-rados ceph-common cronie lvm2 bc nagios icinga python-coverage \\
 pnp4nagios nagios-plugins-http nagios-plugins-swap nagios-plugins-ssh \\
 nagios-plugins-ping nagios-plugins-disk nagios-plugins-users nagios-plugins-procs \\
 nagios-plugins-load nagios-plugins-tcp nfs-utils cron postgresql-server \\
