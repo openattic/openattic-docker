@@ -18,7 +18,7 @@ the instructions below inside the distro directory.
 ### Running the openattic-dev container
 
 * Clone the bitbucket openattic repo
-`hg clone https://bitbucket.org/openattic/openattic`
+`git clone https://bitbucket.org/openattic/openattic`
 
 * Assuming openattic repo is located in `/home/oa/openattic` and the Ceph
 configuration and keyring files are located in `/etc/ceph`, run the following

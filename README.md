@@ -6,4 +6,4 @@ The purpose of this repository is to provide Docker images to help in the develo
 
 ###  openattic-dev
 
-This image runs openattic from the mercurial repo root. It's main purpose is to help testing oA while developing.
+This image runs openATTIC from the git repo root. It's main purpose is to help testing oA while developing.
