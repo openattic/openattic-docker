@@ -31,6 +31,8 @@ function setup_oa {
   cp /srv/openattic/backend/nagios/plugins/check_ceph* /usr/lib/nagios/plugins
   cp -r /srv/openattic/etc/pnp4nagios/check_commands /etc/pnp4nagios/
 
+  # remove *.pyc files
+  find /srv/openattic -name '*.pyc' | xargs rm
 
   sed -i 's!^OADIR=.*!OADIR="/srv/openattic/backend"!' /etc/default/openattic
   sed -i -e 's/^name.*/name = openattic/g' \
@@ -105,6 +107,8 @@ function run_oa_tests {
   cp /srv/openattic/backend/nagios/plugins/check_ceph* /usr/lib/nagios/plugins
   cp -r /srv/openattic/etc/pnp4nagios/check_commands /etc/pnp4nagios/
 
+  # remove *.pyc files
+  find /srv/openattic -name '*.pyc' | xargs rm
 
   sed -i 's!^OADIR=.*!OADIR="/srv/openattic/backend"!' /etc/default/openattic
   sed -i -e 's/^name.*/name = openattic/g' \

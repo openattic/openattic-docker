@@ -70,6 +70,8 @@ EOF
   cp /srv/openattic/backend/nagios/plugins/check_ceph* /usr/lib/nagios/plugins
   cp -r /srv/openattic/etc/pnp4nagios/check_commands /etc/pnp4nagios/
 
+  # remove *.pyc files
+  find /srv/openattic -name '*.pyc' | xargs rm
 
   sed -i 's!^OADIR=.*!OADIR="/srv/openattic/backend"!' /etc/sysconfig/openattic
   sed -i -e 's/^name.*/name = openattic/g' \
@@ -190,6 +192,8 @@ EOF
   cp /srv/openattic/backend/nagios/plugins/check_ceph* /usr/lib/nagios/plugins
   cp -r /srv/openattic/etc/pnp4nagios/check_commands /etc/pnp4nagios/
 
+  # remove *.pyc files
+  find /srv/openattic -name '*.pyc' | xargs rm
 
   sed -i 's!^OADIR=.*!OADIR="/srv/openattic/backend"!' /etc/sysconfig/openattic
   sed -i -e 's/^name.*/name = openattic/g' \
