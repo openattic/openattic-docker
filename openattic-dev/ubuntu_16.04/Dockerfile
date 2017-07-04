@@ -11,6 +11,7 @@ systemd dbus libapache2-mod-wsgi bzip2 ntp udisks2 vlan wget \
 bridge-utils vlan ifenslave-2.6 sg3-utils python-django python-dbus \
 python-configobj python-gobject python-pam python-m2crypto python-netifaces \
 python-netaddr python-requests python-pyudev python-djangorestframework \
+python-pyinotify \
 lsb-release memcached python-memcache python-psycopg2 python-numpy \
 python-rtslib python-apt nagios3-core nagios-plugins-standard \
 nagios-plugins-basic rrdtool lvm2 ceph ceph-common python-ceph \

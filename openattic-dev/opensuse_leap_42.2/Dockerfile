@@ -47,7 +47,7 @@ usermod -a --groups icinga,nagcmd,www openattic
 
 RUN zypper ar http://download.opensuse.org/repositories/devel:/languages:/python/openSUSE_Leap_42.2 python_libs
 RUN zypper --gpg-auto-import-keys ref && \
-zypper -n install python-requests-aws
+zypper -n install python-requests-aws python-pyinotify
 
 EXPOSE 5432 80
 
