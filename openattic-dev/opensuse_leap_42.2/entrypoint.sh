@@ -6,7 +6,7 @@ function setup_oa {
   mkdir -p /var/lock/openattic
   mkdir -p /var/lib/openattic
 
-  cp /srv/openattic/etc/systemd/* /usr/lib/systemd/system/
+  cp /srv/openattic/etc/systemd/openattic-systemd.service.SUSE /usr/lib/systemd/system/openattic-systemd.service
   cp /srv/openattic/etc/apache2/conf-available/openattic.conf /etc/apache2/conf.d
   cp /srv/openattic/etc/apache2/conf-available/openattic-volumes.conf /etc/apache2/conf.d
   cp /srv/openattic/etc/cron.d/updatetwraid /etc/cron.d
@@ -18,37 +18,6 @@ function setup_oa {
   cp /srv/openattic/rpm/sysconfig/openattic.SUSE /var/adm/fillup-templates/sysconfig.openattic
   cp /srv/openattic/etc/tmpfiles.d/openattic.conf /usr/lib/tmpfiles.d/
   cp /srv/openattic/rpm/sysconfig/openattic.SUSE /etc/sysconfig/openattic
-
-
-cat > /etc/default/openattic <<EOF
-PYTHON="/usr/bin/python"
-OADIR="/srv/openattic/backend"
-
-RPCD_PIDFILE="/var/run/openattic_rpcd.pid"
-RPCD_CHUID="openattic:openattic"
-RPCD_LOGFILE="/var/log/openattic/openattic_rpcd.log"
-RPCD_LOGLEVEL="INFO"
-RPCD_OPTIONS="$OADIR/manage.py runrpcd"
-RPCD_CERTFILE=""
-RPCD_KEYFILE=""
-
-SYSD_PIDFILE="/var/run/openattic_systemd.pid"
-SYSD_LOGFILE="/var/log/openattic/openattic_systemd.log"
-SYSD_LOGLEVEL="INFO"
-SYSD_OPTIONS="$OADIR/manage.py runsystemd"
-
-WEBSERVER_SERVICE="apache2"
-SAMBA_SERVICES="smb nmb"
-WINBIND_SERVICE="winbind"
-
-NAGIOS_CFG="/etc/nagios/nagios.cfg"
-NAGIOS_STATUS_DAT="/var/log/nagios/status.dat"
-NAGIOS_SERVICE="nagios"
-NPCD_MOD="/usr/lib64/npcdmod.o"
-NPCD_CFG="/etc/pnp4nagios/npcd.cfg"
-NPCD_SERVICE="npcd"
-#NAGIOS_SERVICES_CFG_PATH="/etc/icinga/objects"
-EOF
 
   # NAGIOS
   cp /srv/openattic/etc/nagios-plugins/config/openattic.cfg /etc/icinga/objects/openattic_plugins.cfg
@@ -131,7 +100,7 @@ function run_oa_tests {
   mkdir -p /var/lock/openattic
   mkdir -p /var/lib/openattic
 
-  cp /srv/openattic/etc/systemd/* /usr/lib/systemd/system/
+  cp /srv/openattic/etc/systemd/openattic-systemd.service.SUSE /usr/lib/systemd/system/openattic-systemd.service
   cp /srv/openattic/etc/cron.d/updatetwraid /etc/cron.d
   cp /srv/openattic/etc/dbus-1/system.d/openattic.conf /etc/dbus-1/system.d
   cp /srv/openattic/etc/logrotate.d/openattic /etc/logrotate.d
@@ -141,36 +110,6 @@ function run_oa_tests {
   cp /srv/openattic/rpm/sysconfig/openattic.SUSE /var/adm/fillup-templates/sysconfig.openattic
   cp /srv/openattic/etc/tmpfiles.d/openattic.conf /usr/lib/tmpfiles.d/
   cp /srv/openattic/rpm/sysconfig/openattic.SUSE /etc/sysconfig/openattic
-
-
-cat > /etc/default/openattic <<EOF
-PYTHON="/usr/bin/python"
-OADIR="/srv/openattic/backend"
-
-RPCD_PIDFILE="/var/run/openattic_rpcd.pid"
-RPCD_CHUID="openattic:openattic"
-RPCD_LOGFILE="/var/log/openattic/openattic_rpcd.log"
-RPCD_LOGLEVEL="INFO"
-RPCD_OPTIONS="$OADIR/manage.py runrpcd"
-RPCD_CERTFILE=""
-RPCD_KEYFILE=""
-
-SYSD_PIDFILE="/var/run/openattic_systemd.pid"
-SYSD_LOGFILE="/var/log/openattic/openattic_systemd.log"
-SYSD_LOGLEVEL="INFO"
-SYSD_OPTIONS="$OADIR/manage.py runsystemd"
-
-WEBSERVER_SERVICE="apache2"
-SAMBA_SERVICES="smb nmb"
-WINBIND_SERVICE="winbind"
-
-NAGIOS_CFG="/etc/nagios/nagios.cfg"
-NAGIOS_STATUS_DAT="/var/log/nagios/status.dat"
-NAGIOS_SERVICE="nagios"
-NPCD_MOD="/usr/lib64/npcdmod.o"
-NPCD_CFG="/etc/pnp4nagios/npcd.cfg"
-NPCD_SERVICE="npcd"
-EOF
 
   # NAGIOS
   cp /srv/openattic/etc/nagios-plugins/config/openattic.cfg /etc/icinga/objects/openattic_plugins.cfg
