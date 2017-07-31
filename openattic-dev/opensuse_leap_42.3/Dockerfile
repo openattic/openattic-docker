@@ -5,6 +5,7 @@ MAINTAINER Ricardo Dias "rdias@suse.com"
 
 ADD entrypoint.sh pgsql_setup.sh /
 
+RUN zypper ar http://download.opensuse.org/repositories/filesystems:/ceph:/luminous/openSUSE_Leap_42.3/filesystems:ceph:luminous.repo
 RUN zypper ar http://download.opensuse.org/repositories/filesystems:/openATTIC:/3.x/openSUSE_Leap_42.3/filesystems:openATTIC:3.x.repo
 RUN zypper --gpg-auto-import-keys ref && \
 zypper -n install --force-resolution krb5 && \
@@ -16,9 +17,10 @@ python-django python-imaging python-m2ext python-memcached python-netaddr \\
 python-netifaces python-pam python-psycopg2 python-pyudev python-requests \\
 python-simplejson selinux-tools policycoreutils python-rtslib \\
 udisks2 wget net-tools apache2 policycoreutils-python  \\
-python-rados ceph-common cronie bc python-coverage \\
+cronie bc python-coverage \\
 nfs-utils cron postgresql-server \\
 postgresql vlan shadow smtp_daemon samba python-mock && \\
+zypper -n install --force-resolution --from 1 ceph-common python-rados && \\
 zypper clean -a
 
 RUN (cd /usr/lib/systemd/system/sysinit.target.wants/; for i in *; do [ $i == \
