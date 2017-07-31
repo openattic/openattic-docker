@@ -1,8 +1,8 @@
 # openattic-dev Docker image
 
 This docker image will run openATTIC from the source. It will spawn all the
-necessary services such as apache, postgresql, nagios/icinga, pnp4nagios, and
-is already ready for managing a Ceph cluster.
+necessary services such as apache, and postgresql, and is already ready for
+managing a Ceph cluster.
 
 You can also run the openATTIC django unit tests using this image.
 
@@ -31,13 +31,17 @@ docker run -t -v /home/oa/openattic:/srv/openattic \
 		      --security-opt seccomp=unconfined \
 		      --stop-signal=SIGRTMIN+3 \
 		      --tmpfs /run/lock  \
-		      openattic-dev
+		      openattic-dev [salt_api_shared_secret_key]
 ```
 
 The container will populate the database, configure nagios monitoring, and
 start apache.
 In the end it will run the `grunt dev` command on the `openattic/webui`
 directory to keep the changes of the ui in sync.
+
+If you specify the optional argument `salt_api_shared_secret_key`, that will
+be appended automatically to the openATTIC settings file to configure the
+Salt-API connection.
 
 After this step you can access openATTIC gui in http://localhost/openattic/
 

@@ -8,8 +8,6 @@ function setup_oa {
 
   cp /srv/openattic/etc/systemd/openattic-systemd.service.SUSE /usr/lib/systemd/system/openattic-systemd.service
   cp /srv/openattic/etc/apache2/conf-available/openattic.conf /etc/apache2/conf.d
-  cp /srv/openattic/etc/apache2/conf-available/openattic-volumes.conf /etc/apache2/conf.d
-  cp /srv/openattic/etc/cron.d/updatetwraid /etc/cron.d
   cp /srv/openattic/etc/dbus-1/system.d/openattic.conf /etc/dbus-1/system.d
   cp /srv/openattic/etc/logrotate.d/openattic /etc/logrotate.d
   cp /srv/openattic/debian/database_install/pgsql_template.ini /etc/openattic/databases/pgsql.ini
@@ -18,26 +16,6 @@ function setup_oa {
   cp /srv/openattic/rpm/sysconfig/openattic.SUSE /var/adm/fillup-templates/sysconfig.openattic
   cp /srv/openattic/etc/tmpfiles.d/openattic.conf /usr/lib/tmpfiles.d/
   cp /srv/openattic/rpm/sysconfig/openattic.SUSE /etc/sysconfig/openattic
-
-  # NAGIOS
-  cp /srv/openattic/etc/nagios-plugins/config/openattic.cfg /etc/icinga/objects/openattic_plugins.cfg
-  echo >> /etc/icinga/objects/openattic_plugins.cfg
-  cat /srv/openattic/etc/nagios-plugins/config/openattic-ceph.cfg >> /etc/icinga/objects/openattic_plugins.cfg
-
-  cp /srv/openattic/etc/nagios3/conf.d/openattic_*.cfg /etc/icinga/objects/
-
-  cp /srv/openattic/backend/nagios/plugins/check_diskstats /usr/lib/nagios/plugins
-  cp /srv/openattic/backend/nagios/plugins/check_oa_utilization /usr/lib/nagios/plugins
-  cp /srv/openattic/backend/nagios/plugins/check_iface_traffic /usr/lib/nagios/plugins
-  cp /srv/openattic/backend/nagios/plugins/check_openattic_rpcd /usr/lib/nagios/plugins
-  cp /srv/openattic/backend/nagios/plugins/check_openattic_systemd /usr/lib/nagios/plugins
-  cp /srv/openattic/backend/nagios/plugins/check_lvm_snapshot /usr/lib/nagios/plugins
-  cp /srv/openattic/backend/nagios/plugins/check_cputime /usr/lib/nagios/plugins
-  cp /srv/openattic/backend/nagios/plugins/check_protocol_traffic /usr/lib/nagios/plugins
-  cp /srv/openattic/backend/nagios/plugins/check_twraid_unit /usr/lib/nagios/plugins
-  cp /srv/openattic/backend/nagios/plugins/notify_openattic /usr/lib/nagios/plugins
-  cp /srv/openattic/backend/nagios/plugins/check_ceph* /usr/lib/nagios/plugins
-  cp -r /srv/openattic/etc/pnp4nagios/check_commands /etc/pnp4nagios/
 
   # remove *.pyc files
   find /srv/openattic -name '*.pyc' | xargs rm
@@ -56,11 +34,6 @@ function setup_oa {
   echo "    Require all granted" >> /etc/apache2/conf.d/openattic.conf
   echo "</Directory>" >> /etc/apache2/conf.d/openattic.conf
 
-  sed -i '/^# You can specify individual object/a \
-cfg_file=/etc/icinga/objects/openattic_plugins.cfg\
-cfg_file=/etc/icinga/objects/openattic_static.cfg' \
-       /etc/icinga/icinga.cfg
-
   chown -R openattic:openattic /var/log/openattic
   chown -R openattic:openattic /etc/openattic
   chown -R openattic:openattic /var/lock/openattic
@@ -74,11 +47,13 @@ cfg_file=/etc/icinga/objects/openattic_static.cfg' \
   sleep 3
   systemctl daemon-reload
   systemctl start apache2
-  systemctl start icinga
-  systemctl start npcd
   systemd-tmpfiles --create /usr/lib/tmpfiles.d/openattic.conf
-  systemctl start lvm2-lvmetad.socket
   /srv/openattic/bin/oaconfig install --allow-broken-hostname
+
+  if [[ $1 != "" ]]; then
+    echo "SALT_API_SHARED_SECRET=\"$1\"" >> /etc/sysconfig/openattic
+  fi
+
   chmod 660 /var/log/openattic/openattic.log
   cd /srv/openattic/webui
   touch .chown
@@ -101,7 +76,6 @@ function run_oa_tests {
   mkdir -p /var/lib/openattic
 
   cp /srv/openattic/etc/systemd/openattic-systemd.service.SUSE /usr/lib/systemd/system/openattic-systemd.service
-  cp /srv/openattic/etc/cron.d/updatetwraid /etc/cron.d
   cp /srv/openattic/etc/dbus-1/system.d/openattic.conf /etc/dbus-1/system.d
   cp /srv/openattic/etc/logrotate.d/openattic /etc/logrotate.d
   cp /srv/openattic/debian/database_install/pgsql_template.ini /etc/openattic/databases/pgsql.ini
@@ -110,26 +84,6 @@ function run_oa_tests {
   cp /srv/openattic/rpm/sysconfig/openattic.SUSE /var/adm/fillup-templates/sysconfig.openattic
   cp /srv/openattic/etc/tmpfiles.d/openattic.conf /usr/lib/tmpfiles.d/
   cp /srv/openattic/rpm/sysconfig/openattic.SUSE /etc/sysconfig/openattic
-
-  # NAGIOS
-  cp /srv/openattic/etc/nagios-plugins/config/openattic.cfg /etc/icinga/objects/openattic_plugins.cfg
-  echo >> /etc/icinga/objects/openattic_plugins.cfg
-  cat /srv/openattic/etc/nagios-plugins/config/openattic-ceph.cfg >> /etc/icinga/objects/openattic_plugins.cfg
-
-  cp /srv/openattic/etc/nagios3/conf.d/openattic_*.cfg /etc/icinga/objects/
-
-  cp /srv/openattic/backend/nagios/plugins/check_diskstats /usr/lib/nagios/plugins
-  cp /srv/openattic/backend/nagios/plugins/check_oa_utilization /usr/lib/nagios/plugins
-  cp /srv/openattic/backend/nagios/plugins/check_iface_traffic /usr/lib/nagios/plugins
-  cp /srv/openattic/backend/nagios/plugins/check_openattic_rpcd /usr/lib/nagios/plugins
-  cp /srv/openattic/backend/nagios/plugins/check_openattic_systemd /usr/lib/nagios/plugins
-  cp /srv/openattic/backend/nagios/plugins/check_lvm_snapshot /usr/lib/nagios/plugins
-  cp /srv/openattic/backend/nagios/plugins/check_cputime /usr/lib/nagios/plugins
-  cp /srv/openattic/backend/nagios/plugins/check_protocol_traffic /usr/lib/nagios/plugins
-  cp /srv/openattic/backend/nagios/plugins/check_twraid_unit /usr/lib/nagios/plugins
-  cp /srv/openattic/backend/nagios/plugins/notify_openattic /usr/lib/nagios/plugins
-  cp /srv/openattic/backend/nagios/plugins/check_ceph* /usr/lib/nagios/plugins
-  cp -r /srv/openattic/etc/pnp4nagios/check_commands /etc/pnp4nagios/
 
   # remove *.pyc files
   find /srv/openattic -name '*.pyc' | xargs rm
@@ -141,13 +95,6 @@ function run_oa_tests {
          -e 's/^host.*/host = localhost/g' \
          -e 's/^port.*/port = 5432/g' \
          /etc/openattic/databases/pgsql.ini
-
-  sed -i '/^# You can specify individual object/a \
-          cfg_file=/etc/icinga/objects/openattic_plugins.cfg\
-          cfg_file=/etc/icinga/objects/openattic_static.cfg' \
-          /etc/icinga/icinga.cfg
-
-
 
   chown -R openattic:openattic /var/log/openattic
   chown -R openattic:openattic /etc/openattic
@@ -161,10 +108,7 @@ function run_oa_tests {
   sleep 3
   systemctl daemon-reload
   systemctl stop apache2
-  systemctl start icinga
-  systemctl start npcd
   systemd-tmpfiles --create /usr/lib/tmpfiles.d/openattic.conf
-  systemctl start lvm2-lvmetad.socket
   /srv/openattic/bin/oaconfig install --allow-broken-hostname
   chmod 660 /var/log/openattic/openattic.log
   systemctl stop apache2
@@ -177,13 +121,14 @@ function run_oa_tests {
 
 case "$1" in
   setup_oa)
-    setup_oa
+    shift
+    setup_oa $*
     ;;
   tests)
     run_oa_tests
     ;;
   *)
-    setup_oa
+    setup_oa $*
     ;;
 esac
 
