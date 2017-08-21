@@ -23,8 +23,6 @@ python get-pip.py && \
 /usr/local/bin/pip install mock
 
 RUN ln -s /usr/bin/nodejs /usr/bin/node
-RUN npm install -g bower
-RUN npm install -g grunt-cli
 
 RUN (cd /lib/systemd/system/sysinit.target.wants/; \
 /bin/bash -c 'for i in *; do [ $i == systemd-tmpfiles-setup.service ] || rm -f $i; done'); \

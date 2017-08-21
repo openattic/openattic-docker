@@ -33,9 +33,6 @@ rm -f /usr/lib/systemd/system/sockets.target.wants/*initctl*; \
 rm -f /usr/lib/systemd/system/basic.target.wants/*;\
 rm -f /usr/lib/systemd/system/anaconda.target.wants/*;
 
-RUN npm install -g bower
-RUN npm install -g grunt-cli
-
 RUN /pgsql_setup.sh init_db
 
 RUN groupadd -r openattic; usermod -a --groups openattic wwwrun; \\
