@@ -6,6 +6,9 @@ function setup_oa {
   mkdir -p /var/lock/openattic
   mkdir -p /var/lib/openattic
 
+  touch "/var/log/openattic/openattic.log"
+  chmod 660 "/var/log/openattic/openattic.log"
+
   cp /srv/openattic/etc/systemd/openattic-systemd.service.SUSE /usr/lib/systemd/system/openattic-systemd.service
   cp /srv/openattic/etc/apache2/conf-available/openattic.conf /etc/apache2/conf.d
   cp /srv/openattic/etc/dbus-1/system.d/openattic.conf /etc/dbus-1/system.d
