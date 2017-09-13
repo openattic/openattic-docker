@@ -5,6 +5,9 @@ function setup_oa {
   mkdir -p /etc/openattic/databases
   mkdir -p /var/lock/openattic
 
+  touch "/var/log/openattic/openattic.log"
+  chmod 660 "/var/log/openattic/openattic.log"
+
   cp /srv/openattic/etc/systemd/* /lib/systemd/system/
   cp /srv/openattic/etc/apache2/conf-available/openattic.conf /etc/apache2/conf-available
   cp /srv/openattic/etc/dbus-1/system.d/openattic.conf /etc/dbus-1/system.d
