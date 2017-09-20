@@ -64,12 +64,11 @@ function setup_oa {
   CHOWN_RET=$?
   if [ "$CHOWN_RET" == "0" ]; then
     npm install
-    bower install --allow-root
   else
-    runuser -l openattic -c 'cd /srv/openattic/webui && npm install && bower install'
+    runuser -l openattic -c 'cd /srv/openattic/webui && npm install'
   fi
   rm .chown
-  grunt dev
+  npm run dev
 }
 
 function run_oa_tests {
