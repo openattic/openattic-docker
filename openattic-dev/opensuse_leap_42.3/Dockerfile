@@ -13,7 +13,7 @@ zypper -n install mercurial git-core nodejs6 npm6 bridge-utils bzip2 dbus-1 syst
 python-django=1.6.11 \\
 python-django-filter python-djangorestframework python-djangorestframework-bulk python-M2Crypto memcached \\
 apache2-mod_wsgi ntp numpy policycoreutils-python python-gobject2 dbus-1-python python-configobj \\
-python-django python-imaging python-m2ext python-memcached python-netaddr \\
+python-django python-imaging python-memcached python-netaddr \\
 python-netifaces python-pam python-psycopg2 python-pyudev python-requests \\
 python-simplejson selinux-tools policycoreutils python-rtslib \\
 udisks2 wget net-tools apache2 policycoreutils-python  \\
