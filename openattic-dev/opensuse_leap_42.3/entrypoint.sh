@@ -54,7 +54,7 @@ function setup_oa {
   /srv/openattic/bin/oaconfig install --allow-broken-hostname
 
   if [[ $1 != "" ]]; then
-    echo "SALT_API_SHARED_SECRET=\"$1\"" >> /etc/sysconfig/openattic
+    sed -i -r "s/#?SALT_API_SHARED_SECRET.*/SALT_API_SHARED_SECRET=\"$1\"/" /etc/sysconfig/openattic
   fi
 
   chmod 660 /var/log/openattic/openattic.log
