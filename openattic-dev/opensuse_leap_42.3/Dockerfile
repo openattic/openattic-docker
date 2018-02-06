@@ -39,7 +39,7 @@ RUN groupadd -r openattic; usermod -a --groups openattic wwwrun; \\
 useradd -r -g openattic -d /var/lib/openattic -s /bin/bash -c "openATTIC System User" openattic; \\
 usermod -a --groups www openattic
 
-RUN zypper ar http://download.opensuse.org/repositories/devel:/languages:/python/openSUSE_Leap_42.2 python_libs
+RUN zypper ar http://download.opensuse.org/repositories/devel:/languages:/python/openSUSE_Leap_42.3 python_libs
 RUN zypper --gpg-auto-import-keys ref && \
 zypper -n install python-requests-aws python-pyinotify
 
